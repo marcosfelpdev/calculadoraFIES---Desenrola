@@ -63,3 +63,4 @@ describe('App - Calculadora FIES', () => {
     expect(screen.getByTestId('restituicao-seguro').textContent).toContain('2.184,00');
   });
 });
+

@@ -39,3 +39,4 @@ export interface CalculatorOutputs {
   // Passo E: Restituição de Venda Casada
   restituicaoEmDobro: number;
 }
+

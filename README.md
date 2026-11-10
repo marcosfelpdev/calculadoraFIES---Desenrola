@@ -79,3 +79,4 @@ npm test
 npm run build
 ```
 Os arquivos estáticos otimizados serão gerados na pasta `dist/`.
+
