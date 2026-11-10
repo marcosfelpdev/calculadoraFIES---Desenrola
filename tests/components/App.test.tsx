@@ -2,21 +2,27 @@ import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from '../../src/App';
 
-describe('App - Calculadora FIES', () => {
-  it('renderiza todos os campos de entrada e blocos de resultado', () => {
+describe('App - Calculadora FIES (Design Visual)', () => {
+  it('renderiza o cabeçalho oficial, formulário e blocos de resultado', () => {
     render(<App />);
 
-    // Formulário
+    // Cabeçalho de marca
+    expect(screen.getByText('DESENROLA')).toBeInTheDocument();
+    expect(screen.getByText('FIES')).toBeInTheDocument();
+
+    // Painel de Dados do Contrato
+    expect(screen.getByText(/Dados do contrato/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Ano do Contrato/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Saldo Devedor Atual/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Data Atual/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Situação do Contrato/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Condição do Benefício/i)).toBeInTheDocument();
+    expect(screen.getByText(/Situação do Contrato:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Condição do Benefício:/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Meses Já Pagos/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Valor Seguro\/mês/i)).toBeInTheDocument();
 
     // Blocos de Resultados
     expect(screen.getByText(/Resultados da Revisão/i)).toBeInTheDocument();
+    expect(screen.getByText(/ECONOMIA TOTAL/i)).toBeInTheDocument();
     expect(screen.getByText(/Condições de Pagamento/i)).toBeInTheDocument();
     expect(screen.getByText(/Seguro Prestamista/i)).toBeInTheDocument();
   });
@@ -25,12 +31,12 @@ describe('App - Calculadora FIES', () => {
     render(<App />);
 
     const saldoInput = screen.getByLabelText(/Saldo Devedor Atual/i);
-    const situacaoSelect = screen.getByLabelText(/Situação do Contrato/i);
-    const beneficioSelect = screen.getByLabelText(/Condição do Benefício/i);
+    const btnInadimplente = screen.getByRole('radio', { name: /INADIMPLENTE/i });
+    const btnNenhum = screen.getByRole('radio', { name: /Nenhum/i });
 
-    // Ajusta para INADIMPLENTE e Nenhum (77%)
-    fireEvent.change(situacaoSelect, { target: { value: 'INADIMPLENTE' } });
-    fireEvent.change(beneficioSelect, { target: { value: 'Nenhum' } });
+    // Clica nos botões segmentados
+    fireEvent.click(btnInadimplente);
+    fireEvent.click(btnNenhum);
 
     // Digita 3532300 (representando 35.323,00 via máscara de centavos)
     fireEvent.change(saldoInput, { target: { value: '3532300' } });
@@ -51,11 +57,11 @@ describe('App - Calculadora FIES', () => {
     render(<App />);
 
     const saldoInput = screen.getByLabelText(/Saldo Devedor Atual/i);
-    const situacaoSelect = screen.getByLabelText(/Situação do Contrato/i);
-    const beneficioSelect = screen.getByLabelText(/Condição do Benefício/i);
+    const btnInadimplente = screen.getByRole('radio', { name: /INADIMPLENTE/i });
+    const btnNenhum = screen.getByRole('radio', { name: /Nenhum/i });
 
-    fireEvent.change(situacaoSelect, { target: { value: 'INADIMPLENTE' } });
-    fireEvent.change(beneficioSelect, { target: { value: 'Nenhum' } });
+    fireEvent.click(btnInadimplente);
+    fireEvent.click(btnNenhum);
     fireEvent.change(saldoInput, { target: { value: '3532300' } });
 
     const parcelasInput = screen.getByTestId('qtd-parcelas');
@@ -83,7 +89,6 @@ describe('App - Calculadora FIES', () => {
     const valorSeguroInput = screen.getByLabelText(/Valor Seguro\/mês/i);
 
     fireEvent.change(mesesInput, { target: { value: '24' } });
-    // Digita 4550 centavos (R$ 45,50)
     fireEvent.change(valorSeguroInput, { target: { value: '4550' } });
 
     expect((valorSeguroInput as HTMLInputElement).value).toBe('45,50');

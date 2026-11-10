@@ -41,3 +41,4 @@ describe('currencyMask utils', () => {
     });
   });
 });
+

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { CalculatorOutputs } from '../types/calculator';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatInteger } from '../utils/formatters';
 
 interface ResultsDisplayProps {
   outputs: CalculatorOutputs;
@@ -19,133 +19,143 @@ export const ResultsDisplay: FC<ResultsDisplayProps> = ({
     outputs.qtdParcelas !== outputs.qtdParcelasPadrao;
 
   return (
-    <div className="results-container">
-      {/* Bloco 1: Resultados da Revisão */}
-      <section className="card result-card" aria-labelledby="revisao-heading">
-        <h2 id="revisao-heading" className="section-title">
-          2. Resultados da Revisão
+    <div className="results-panel" aria-labelledby="revisao-heading">
+      <div className="panel-header">
+        <h2 id="revisao-heading" className="panel-title">
+          Resultados da Revisão
         </h2>
+        <p className="panel-subtitle">
+          Condições recalculadas de acordo com as regras do Desenrola FIES.
+        </p>
+      </div>
 
-        <div className="result-row">
-          <span className="result-label">Saldo Devedor Original:</span>
-          <span className="result-value" data-testid="saldo-original">
+      {/* Destaque Central: ECONOMIA TOTAL (Inspirado no TOTAL kcal de Image 2, sem círculo) */}
+      <div className="total-highlight-card">
+        <span className="total-highlight-label">ECONOMIA TOTAL</span>
+        <div className="total-highlight-value" data-testid="economia-total">
+          {formatCurrency(outputs.economiaTotal)}
+        </div>
+        <span className="total-highlight-caption">
+          Expurgo de juros + Desconto Desenrola FIES
+        </span>
+      </div>
+
+      {/* Lista com a hierarquia dos itens da revisão */}
+      <div className="review-breakdown-card">
+        <div className="breakdown-row">
+          <span className="breakdown-label">Saldo Devedor Original</span>
+          <span className="breakdown-value" data-testid="saldo-original">
             {formatCurrency(outputs.saldoDevedorOriginal)}
           </span>
         </div>
 
-        <div className="result-row discount">
-          <span className="result-label">Economia em Juros:</span>
-          <span className="result-value" data-testid="economia-juros">
+        <div className="breakdown-row discount">
+          <span className="breakdown-label">Economia em Juros</span>
+          <span className="breakdown-value" data-testid="economia-juros">
             - {formatCurrency(outputs.economiaJuros)}
           </span>
         </div>
 
-        <div className="result-row discount">
-          <span className="result-label">Desconto Desenrola FIES:</span>
-          <span className="result-value" data-testid="desconto-desenrola">
+        <div className="breakdown-row discount">
+          <span className="breakdown-label">Desconto Desenrola FIES</span>
+          <span className="breakdown-value" data-testid="desconto-desenrola">
             - {formatCurrency(outputs.descontoDesenrolaCalc)}
           </span>
         </div>
 
-        <div className="result-row highlight-total">
-          <span className="result-label">💰 Economia Total:</span>
-          <span className="result-value" data-testid="economia-total">
-            {formatCurrency(outputs.economiaTotal)}
-          </span>
-        </div>
-
-        <div className="result-row highlight-final">
-          <span className="result-label">Novo Saldo Devedor:</span>
-          <span className="result-value" data-testid="novo-saldo">
+        <div className="breakdown-row final-balance">
+          <span className="breakdown-label">Novo Saldo Devedor</span>
+          <span className="breakdown-value" data-testid="novo-saldo">
             {formatCurrency(outputs.novoSaldoDevedor)}
           </span>
         </div>
-      </section>
+      </div>
 
-      {/* Bloco 2: Condições de Pagamento */}
-      <section
-        className="card result-card"
-        aria-labelledby="pagamento-heading"
-      >
-        <h2 id="pagamento-heading" className="section-title">
-          3. Condições de Pagamento
-        </h2>
-
-        <div className="result-row">
-          <label htmlFor="qtd-parcelas-input" className="result-label">
-            Qtd. de Parcelas:
-          </label>
-          <div className="parcelas-controls">
-            {outputs.novoSaldoDevedor > 0 ? (
-              <div className="parcelas-input-wrapper">
-                <input
-                  id="qtd-parcelas-input"
-                  type="number"
-                  min="1"
-                  max="180"
-                  value={outputs.qtdParcelas || ''}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val > 0) {
-                      onCustomQtdParcelasChange?.(
-                        Math.min(180, Math.max(1, Math.round(val)))
-                      );
-                    }
-                  }}
-                  data-testid="qtd-parcelas"
-                  className="parcelas-input"
-                />
-                <span className="parcelas-max">/ 180x</span>
-              </div>
-            ) : (
-              <span className="result-value" data-testid="qtd-parcelas">
-                0
-              </span>
-            )}
-          </div>
+      {/* Condições de Pagamento: Adaptando os cards de macros (Protein, Carbs, Fat) */}
+      <div className="payment-plan-section">
+        <div className="section-subtitle-row">
+          <span className="section-micro-title">Condições de Pagamento</span>
+          {outputs.novoSaldoDevedor > 0 && isCustomized && (
+            <button
+              type="button"
+              className="btn-minimal-reset"
+              onClick={() => onCustomQtdParcelasChange?.(null)}
+              data-testid="btn-reset-parcelas"
+              title="Voltar ao padrão aproximado de R$ 200/parcela"
+            >
+              ↩ Voltar ao padrão ({outputs.qtdParcelasPadrao}x de{' '}
+              {formatCurrency(outputs.valorDaParcelaPadrao)})
+            </button>
+          )}
         </div>
 
-        {outputs.novoSaldoDevedor > 0 && (
-          <div className="parcelas-action-row">
-            {isCustomized ? (
-              <button
-                type="button"
-                className="btn-reset-parcelas"
-                onClick={() => onCustomQtdParcelasChange?.(null)}
-                data-testid="btn-reset-parcelas"
-                title="Restaurar para a quantidade padrão calculada (~R$ 200/parcela)"
-              >
-                🔄 Voltar ao padrão ({outputs.qtdParcelasPadrao}x de {formatCurrency(outputs.valorDaParcelaPadrao)})
-              </button>
-            ) : (
-              <span className="badge-default">
-                Plano padrão calculado (~R$ 200,00/mês)
-              </span>
-            )}
+        <div className="payment-cards-grid">
+          {/* Card 1: Quantidade de Parcelas */}
+          <div className="payment-mini-card">
+            <span className="mini-card-label">Qtd. de Parcelas</span>
+            <div className="mini-card-interactive">
+              {outputs.novoSaldoDevedor > 0 ? (
+                <div className="parcelas-stepper">
+                  <input
+                    id="qtd-parcelas-input"
+                    type="number"
+                    min="1"
+                    max="180"
+                    value={outputs.qtdParcelas || ''}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      if (val > 0) {
+                        onCustomQtdParcelasChange?.(
+                          Math.min(180, Math.max(1, Math.round(val)))
+                        );
+                      }
+                    }}
+                    data-testid="qtd-parcelas"
+                    className="parcelas-clean-input"
+                  />
+                  <span className="parcelas-unit">x (máx 180)</span>
+                </div>
+              ) : (
+                <span className="mini-card-value" data-testid="qtd-parcelas">
+                  0x
+                </span>
+              )}
+            </div>
+            <span className="mini-card-hint">
+              {isCustomized ? 'Plano personalizado' : 'Base padrão: ~R$ 200/mês'}
+            </span>
           </div>
-        )}
 
-        <div className="result-row">
-          <span className="result-label">Valor da Parcela:</span>
-          <span className="result-value" data-testid="valor-parcela">
-            {formatCurrency(outputs.valorDaParcela)}
+          {/* Card 2: Valor da Parcela */}
+          <div className="payment-mini-card highlight-card">
+            <span className="mini-card-label">Valor da Parcela</span>
+            <div className="mini-card-value" data-testid="valor-parcela">
+              {formatCurrency(outputs.valorDaParcela)}
+            </div>
+            <span className="mini-card-hint">
+              {outputs.qtdParcelas > 0
+                ? `${formatInteger(outputs.qtdParcelas)} parcelas mensais`
+                : 'Sem parcelas'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bloco Seguro Prestamista (Venda Casada) */}
+      <div className="insurance-refund-card">
+        <div className="insurance-header">
+          <span className="insurance-title">
+            Seguro Prestamista (Venda Casada)
           </span>
+          <span className="refund-badge">Restituição em Dobro</span>
         </div>
-      </section>
-
-      {/* Bloco 3: Seguro Prestamista (Venda Casada) */}
-      <section className="card result-card" aria-labelledby="seguro-heading">
-        <h2 id="seguro-heading" className="section-title">
-          4. Seguro Prestamista (Venda Casada)
-        </h2>
-
-        <div className="result-row highlight-restituicao">
-          <span className="result-label">Restituição em Dobro:</span>
-          <span className="result-value" data-testid="restituicao-seguro">
+        <div className="insurance-body">
+          <span className="insurance-label">Total a Restituir:</span>
+          <span className="insurance-value" data-testid="restituicao-seguro">
             + {formatCurrency(outputs.restituicaoEmDobro)}
           </span>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
