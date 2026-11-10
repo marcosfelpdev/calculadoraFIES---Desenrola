@@ -13,6 +13,7 @@ export interface CalculatorInputs {
   condicaoBeneficio: CondicaoBeneficio;
   mesesJaPagosSeguro: number;
   valorSeguroMes: number;
+  customQtdParcelas?: number | null;
 }
 
 export interface CalculatorOutputs {
@@ -35,8 +36,9 @@ export interface CalculatorOutputs {
   // Passo D: Regras Bancárias de Parcelamento
   qtdParcelas: number;
   valorDaParcela: number;
+  qtdParcelasPadrao: number;
+  valorDaParcelaPadrao: number;
 
   // Passo E: Restituição de Venda Casada
   restituicaoEmDobro: number;
 }
-

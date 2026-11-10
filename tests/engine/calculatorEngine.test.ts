@@ -34,10 +34,31 @@ describe('calculateDesenrolaFies', () => {
 
     // Passo D: MIN(180, MAX(1, INT(6466.935 / 200))) = 32
     expect(res.qtdParcelas).toBe(32);
+    expect(res.qtdParcelasPadrao).toBe(32);
     expect(res.valorDaParcela).toBeCloseTo(202.0917, 2);
+    expect(res.valorDaParcelaPadrao).toBeCloseTo(202.0917, 2);
 
     // Passo E: 12 * 50 * 2 = 1200
     expect(res.restituicaoEmDobro).toBe(1200.00);
+  });
+
+  it('permite customizar a quantidade de parcelas e recalcular valor da parcela', () => {
+    const inputs: CalculatorInputs = {
+      anoContrato: 2010,
+      saldoDevedorAtual: 35323.00,
+      dataAtual: '2026-11-10',
+      situacaoContrato: 'INADIMPLENTE',
+      condicaoBeneficio: 'Nenhum',
+      mesesJaPagosSeguro: 0,
+      valorSeguroMes: 0,
+      customQtdParcelas: 60,
+    };
+
+    const res = calculateDesenrolaFies(inputs);
+    expect(res.qtdParcelas).toBe(60);
+    expect(res.qtdParcelasPadrao).toBe(32);
+    expect(res.valorDaParcela).toBeCloseTo(6466.935 / 60, 2);
+    expect(res.valorDaParcelaPadrao).toBeCloseTo(6466.935 / 32, 2);
   });
 
   it('calcula corretamente para ADIMPLENTE com base proporcional (144 / 175)', () => {
@@ -92,8 +113,25 @@ describe('calculateDesenrolaFies', () => {
     expect(res.valorDaParcela).toBe(0);
   });
 
-  it('trata saldo devedor pequeno (< 200) garantindo no mínimo 1 parcela', () => {
-    // If novoSaldoDevedor is 150 > 0, INT(150/200) = 0, MAX(1, 0) = 1
+  it('trata saldo devedor negativo de forma segura', () => {
+    const inputs: CalculatorInputs = {
+      anoContrato: 2020,
+      saldoDevedorAtual: -5000,
+      dataAtual: '2026-11-10',
+      situacaoContrato: 'INADIMPLENTE',
+      condicaoBeneficio: 'Nenhum',
+      mesesJaPagosSeguro: 0,
+      valorSeguroMes: 0,
+    };
+
+    const res = calculateDesenrolaFies(inputs);
+    expect(res.saldoDevedorOriginal).toBe(0);
+    expect(res.novoSaldoDevedor).toBe(0);
+    expect(res.qtdParcelas).toBe(0);
+    expect(res.valorDaParcela).toBe(0);
+  });
+
+  it('trata saldo devedor pequeno (< 200) garantindo exatamente 1 parcela no padrão', () => {
     const inputs: CalculatorInputs = {
       anoContrato: 2020,
       saldoDevedorAtual: 200,
@@ -105,11 +143,8 @@ describe('calculateDesenrolaFies', () => {
     };
 
     const res = calculateDesenrolaFies(inputs);
-    // novoSaldoDevedor is small but > 0
-    if (res.novoSaldoDevedor > 0) {
-      expect(res.qtdParcelas).toBeGreaterThanOrEqual(1);
-      expect(res.valorDaParcela).toBe(res.novoSaldoDevedor / res.qtdParcelas);
-    }
+    expect(res.qtdParcelas).toBe(1);
+    expect(res.valorDaParcela).toBeCloseTo(res.novoSaldoDevedor, 2);
   });
 
   it('aplica o teto de 180 parcelas quando o saldo devedor resultar em > 180 parcelas', () => {
@@ -128,4 +163,3 @@ describe('calculateDesenrolaFies', () => {
     expect(res.valorDaParcela).toBeCloseTo(res.novoSaldoDevedor / 180, 2);
   });
 });
-

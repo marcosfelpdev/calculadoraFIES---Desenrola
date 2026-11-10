@@ -12,6 +12,7 @@ export const initialInputs: CalculatorInputs = {
   condicaoBeneficio: 'Auxílio Emergencial ou CadÚnico - 1 ano',
   mesesJaPagosSeguro: 0,
   valorSeguroMes: 0,
+  customQtdParcelas: null,
 };
 
 export default function App() {
@@ -20,6 +21,13 @@ export default function App() {
   const outputs = useMemo(() => {
     return calculateDesenrolaFies(inputs);
   }, [inputs]);
+
+  const handleCustomParcelasChange = (val: number | null) => {
+    setInputs((prev) => ({
+      ...prev,
+      customQtdParcelas: val,
+    }));
+  };
 
   return (
     <main className="app-container">
@@ -30,7 +38,11 @@ export default function App() {
 
       <div className="calculator-layout">
         <CalculatorForm inputs={inputs} onChange={setInputs} />
-        <ResultsDisplay outputs={outputs} />
+        <ResultsDisplay
+          outputs={outputs}
+          customQtdParcelas={inputs.customQtdParcelas}
+          onCustomQtdParcelasChange={handleCustomParcelasChange}
+        />
       </div>
     </main>
   );

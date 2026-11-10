@@ -39,13 +39,20 @@ export function calculateDesenrolaFies(inputs: CalculatorInputs): CalculatorOutp
   const novoSaldoDevedor = Math.max(0, saldoDevedorOriginal - economiaTotal);
 
   // Passo D: Regras Bancárias de Parcelamento
-  // Fórmula exata: MIN(180, MAX(1, INT(novoSaldoDevedor / 200)))
-  let qtdParcelas = 0;
-  let valorDaParcela = 0;
+  let qtdParcelasPadrao = 0;
+  let valorDaParcelaPadrao = 0;
 
   if (novoSaldoDevedor > 0) {
     const parcelasCalculadas = Math.floor(novoSaldoDevedor / 200);
-    qtdParcelas = Math.min(180, Math.max(1, parcelasCalculadas));
+    qtdParcelasPadrao = Math.min(180, Math.max(1, parcelasCalculadas));
+    valorDaParcelaPadrao = novoSaldoDevedor / qtdParcelasPadrao;
+  }
+
+  let qtdParcelas = qtdParcelasPadrao;
+  let valorDaParcela = valorDaParcelaPadrao;
+
+  if (novoSaldoDevedor > 0 && inputs.customQtdParcelas && inputs.customQtdParcelas > 0) {
+    qtdParcelas = Math.min(180, Math.max(1, Math.round(inputs.customQtdParcelas)));
     valorDaParcela = novoSaldoDevedor / qtdParcelas;
   }
 
@@ -65,7 +72,8 @@ export function calculateDesenrolaFies(inputs: CalculatorInputs): CalculatorOutp
     novoSaldoDevedor,
     qtdParcelas,
     valorDaParcela,
+    qtdParcelasPadrao,
+    valorDaParcelaPadrao,
     restituicaoEmDobro,
   };
 }
-

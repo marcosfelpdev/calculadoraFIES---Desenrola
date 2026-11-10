@@ -117,6 +117,46 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
+/* Currency Input with Mask */
+.currency-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.currency-input-wrapper:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.currency-prefix {
+  padding-left: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #64748b;
+  user-select: none;
+}
+
+.currency-input-wrapper input {
+  border: none;
+  box-shadow: none;
+  flex: 1;
+  width: 100%;
+  padding-left: 0.4rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.currency-input-wrapper input:focus {
+  border: none;
+  box-shadow: none;
+}
+
+/* Results Display */
 .results-container {
   display: flex;
   flex-direction: column;
@@ -175,4 +215,63 @@ select:focus {
 .result-row.highlight-restituicao .result-value {
   color: #059669;
   font-size: 1.05rem;
+}
+
+/* Parcelas Controls */
+.parcelas-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.parcelas-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.parcelas-input {
+  width: 80px;
+  text-align: center;
+  padding: 0.3rem 0.5rem;
+  font-weight: 600;
+}
+
+.parcelas-max {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.parcelas-action-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.badge-default {
+  font-size: 0.75rem;
+  color: #047857;
+  background-color: #ecfdf5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  border: 1px solid #a7f3d0;
+}
+
+.btn-reset-parcelas {
+  font-size: 0.75rem;
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-reset-parcelas:hover {
+  background-color: #dbeafe;
+  color: #1e40af;
 }

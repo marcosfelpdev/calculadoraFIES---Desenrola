@@ -4,6 +4,7 @@ import {
   CondicaoBeneficio,
   SituacaoContrato,
 } from '../types/calculator';
+import { CurrencyInput } from './CurrencyInput';
 
 interface CalculatorFormProps {
   inputs: CalculatorInputs;
@@ -40,17 +41,12 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
         </div>
 
         <div className="form-group">
-          <label htmlFor="saldoDevedorAtual">Saldo Devedor Atual (R$):</label>
-          <input
+          <label htmlFor="saldoDevedorAtual">Saldo Devedor Atual:</label>
+          <CurrencyInput
             id="saldoDevedorAtual"
-            type="number"
-            step="0.01"
-            min="0"
-            value={inputs.saldoDevedorAtual || ''}
-            onChange={(e) =>
-              handleChange('saldoDevedorAtual', Number(e.target.value))
-            }
-            placeholder="Ex: 35323.00"
+            value={inputs.saldoDevedorAtual}
+            onChange={(val) => handleChange('saldoDevedorAtual', val)}
+            placeholder="0,00"
           />
         </div>
 
@@ -118,17 +114,12 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
         </div>
 
         <div className="form-group">
-          <label htmlFor="valorSeguroMes">Valor Seguro/mês (R$):</label>
-          <input
+          <label htmlFor="valorSeguroMes">Valor Seguro/mês:</label>
+          <CurrencyInput
             id="valorSeguroMes"
-            type="number"
-            step="0.01"
-            min="0"
-            value={inputs.valorSeguroMes || ''}
-            onChange={(e) =>
-              handleChange('valorSeguroMes', Number(e.target.value))
-            }
-            placeholder="0.00"
+            value={inputs.valorSeguroMes}
+            onChange={(val) => handleChange('valorSeguroMes', val)}
+            placeholder="0,00"
           />
         </div>
       </div>
