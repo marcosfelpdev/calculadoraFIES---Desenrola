@@ -5,7 +5,6 @@ import {
 } from '../types/calculator';
 
 export const TAXA_JUROS_ANUAL = 0.034;
-export const PARCELAS_RESTANTES_PADRAO = 175;
 
 export const DESCONTOS_BENEFICIO: Record<CondicaoBeneficio, number> = {
   'Nenhum': 0.77,
@@ -13,16 +12,16 @@ export const DESCONTOS_BENEFICIO: Record<CondicaoBeneficio, number> = {
   'Auxílio Emergencial ou CadÚnico - 5 anos': 0.99,
 };
 
+export const SEGURO_PRESTAMISTA_FIXO = {
+  cursoRegular: 4500,
+  medicina: 15000,
+} as const;
+
 export function calculateDesenrolaFies(inputs: CalculatorInputs): CalculatorOutputs {
   const saldoDevedorAtual = Math.max(0, Number(inputs.saldoDevedorAtual) || 0);
-  const mesesJaPagosSeguro = Math.max(0, Number(inputs.mesesJaPagosSeguro) || 0);
-  const valorSeguroMes = Math.max(0, Number(inputs.valorSeguroMes) || 0);
 
   // Passo A: Cálculo Base e Expurgo de Juros
-  const valorBaseCalc =
-    inputs.situacaoContrato === 'ADIMPLENTE'
-      ? (saldoDevedorAtual / PARCELAS_RESTANTES_PADRAO) * 144
-      : saldoDevedorAtual;
+  const valorBaseCalc = saldoDevedorAtual;
 
   const totalJurosPrice = valorBaseCalc * TAXA_JUROS_ANUAL * 12;
   const totalJurosSimples = valorBaseCalc * TAXA_JUROS_ANUAL * 6;
@@ -56,9 +55,6 @@ export function calculateDesenrolaFies(inputs: CalculatorInputs): CalculatorOutp
     valorDaParcela = novoSaldoDevedor / qtdParcelas;
   }
 
-  // Passo E: Restituição de Venda Casada
-  const restituicaoEmDobro = mesesJaPagosSeguro * valorSeguroMes * 2;
-
   return {
     valorBaseCalc,
     totalJurosPrice,
@@ -74,6 +70,5 @@ export function calculateDesenrolaFies(inputs: CalculatorInputs): CalculatorOutp
     valorDaParcela,
     qtdParcelasPadrao,
     valorDaParcelaPadrao,
-    restituicaoEmDobro,
   };
 }

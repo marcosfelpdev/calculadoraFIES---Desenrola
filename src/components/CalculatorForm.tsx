@@ -1,11 +1,35 @@
 import type { FC } from 'react';
-import type { CalculatorInputs } from '../types/calculator';
+import type { CalculatorInputs, CondicaoBeneficio } from '../types/calculator';
+import { SEGURO_PRESTAMISTA_FIXO } from '../engine/calculatorEngine';
+import { formatCurrency } from '../utils/formatters';
 import { CurrencyInput } from './CurrencyInput';
 
 interface CalculatorFormProps {
   inputs: CalculatorInputs;
   onChange: (inputs: CalculatorInputs) => void;
 }
+
+const BENEFIT_OPTIONS: ReadonlyArray<{
+  value: CondicaoBeneficio;
+  label: string;
+  ariaLabel: string;
+}> = [
+  {
+    value: 'Nenhum',
+    label: '77%',
+    ariaLabel: '77% - Nenhum',
+  },
+  {
+    value: 'Auxílio Emergencial ou CadÚnico - 1 ano',
+    label: '92%',
+    ariaLabel: '92% - Auxílio Emergencial ou CadÚnico (1 ano)',
+  },
+  {
+    value: 'Auxílio Emergencial ou CadÚnico - 5 anos',
+    label: '99%',
+    ariaLabel: '99% - Auxílio Emergencial ou CadÚnico (5 anos)',
+  },
+];
 
 export const CalculatorForm: FC<CalculatorFormProps> = ({
   inputs,
@@ -30,7 +54,7 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
       </div>
 
       <div className="form-content">
-        {/* 1. Dados cadastrais do contrato */}
+        {/* Linha 1: Ano do Contrato e Data Atual */}
         <div className="inputs-grid">
           <div className="form-group">
             <label htmlFor="anoContrato" className="field-label">
@@ -49,6 +73,22 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
           </div>
 
           <div className="form-group">
+            <label htmlFor="dataAtual" className="field-label">
+              Data Atual:
+            </label>
+            <input
+              id="dataAtual"
+              type="date"
+              value={inputs.dataAtual}
+              onChange={(e) => handleChange('dataAtual', e.target.value)}
+              className="styled-input"
+            />
+          </div>
+        </div>
+
+        {/* Linha 2: Saldo Devedor Atual e Condição do Benefício */}
+        <div className="inputs-grid">
+          <div className="form-group">
             <label htmlFor="saldoDevedorAtual" className="field-label">
               Saldo Devedor Atual:
             </label>
@@ -61,49 +101,38 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
           </div>
 
           <div className="form-group">
-            <label htmlFor="dataAtual" className="field-label">
-              Data Atual:
-            </label>
-            <input
-              id="dataAtual"
-              type="date"
-              value={inputs.dataAtual}
-              onChange={(e) => handleChange('dataAtual', e.target.value)}
-              className="styled-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="mesesJaPagosSeguro" className="field-label">
-              Meses Já Pagos (Seguro):
-            </label>
-            <input
-              id="mesesJaPagosSeguro"
-              type="number"
-              min="0"
-              value={inputs.mesesJaPagosSeguro || ''}
-              onChange={(e) =>
-                handleChange('mesesJaPagosSeguro', Number(e.target.value))
-              }
-              placeholder="0"
-              className="styled-input"
-            />
-          </div>
-
-          <div className="form-group full-width">
-            <label htmlFor="valorSeguroMes" className="field-label">
-              Valor Seguro/mês:
-            </label>
-            <CurrencyInput
-              id="valorSeguroMes"
-              value={inputs.valorSeguroMes}
-              onChange={(val) => handleChange('valorSeguroMes', val)}
-              placeholder="0,00"
-            />
+            <span id="label-beneficio" className="field-label">
+              Condição do Benefício:
+            </span>
+            <div
+              className="segmented-control segmented-benefit-row"
+              role="radiogroup"
+              aria-labelledby="label-beneficio"
+            >
+              {BENEFIT_OPTIONS.map((option) => {
+                const isActive = inputs.condicaoBeneficio === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={isActive}
+                    aria-label={option.ariaLabel}
+                    title={option.ariaLabel}
+                    className={`segmented-btn ${isActive ? 'active' : ''}`}
+                    onClick={() =>
+                      handleChange('condicaoBeneficio', option.value)
+                    }
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* 2. Situação do Contrato - Segmented Control abaixo dos dados cadastrais */}
+        {/* Linha 3: Situação do Contrato */}
         <div className="form-group full-width">
           <span id="label-situacao" className="field-label">
             Situação do Contrato:
@@ -138,74 +167,30 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
           </div>
         </div>
 
-        {/* 3. Condição do Benefício - Segmented Control 3 opções */}
-        <div className="form-group full-width">
-          <span id="label-beneficio" className="field-label">
-            Condição do Benefício:
-          </span>
-          <div
-            className="segmented-control segmented-stack"
-            role="radiogroup"
-            aria-labelledby="label-beneficio"
-          >
-            <button
-              type="button"
-              role="radio"
-              aria-checked={inputs.condicaoBeneficio === 'Nenhum'}
-              className={`segmented-btn ${
-                inputs.condicaoBeneficio === 'Nenhum' ? 'active' : ''
-              }`}
-              onClick={() => handleChange('condicaoBeneficio', 'Nenhum')}
-            >
-              <span className="btn-text">Nenhum</span>
-              <span className="discount-pill">77%</span>
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={
-                inputs.condicaoBeneficio ===
-                'Auxílio Emergencial ou CadÚnico - 1 ano'
-              }
-              className={`segmented-btn ${
-                inputs.condicaoBeneficio ===
-                'Auxílio Emergencial ou CadÚnico - 1 ano'
-                  ? 'active'
-                  : ''
-              }`}
-              onClick={() =>
-                handleChange(
-                  'condicaoBeneficio',
-                  'Auxílio Emergencial ou CadÚnico - 1 ano'
-                )
-              }
-            >
-              <span className="btn-text">Auxílio Emergencial / CadÚnico (1 ano)</span>
-              <span className="discount-pill">92%</span>
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={
-                inputs.condicaoBeneficio ===
-                'Auxílio Emergencial ou CadÚnico - 5 anos'
-              }
-              className={`segmented-btn ${
-                inputs.condicaoBeneficio ===
-                'Auxílio Emergencial ou CadÚnico - 5 anos'
-                  ? 'active'
-                  : ''
-              }`}
-              onClick={() =>
-                handleChange(
-                  'condicaoBeneficio',
-                  'Auxílio Emergencial ou CadÚnico - 5 anos'
-                )
-              }
-            >
-              <span className="btn-text">Auxílio Emergencial / CadÚnico (5 anos)</span>
-              <span className="discount-pill">99%</span>
-            </button>
+        {/* Linha 4: Bloco informativo fixo Seguro Prestamista */}
+        <div className="insurance-refund-card">
+          <div className="insurance-header">
+            <span className="insurance-title">
+              Seguro Prestamista (Venda Casada)
+            </span>
+            <span className="refund-badge">Restituição em Dobro</span>
+          </div>
+          <div className="insurance-fixed-list">
+            <div className="insurance-body">
+              <span className="insurance-label">Curso Regular:</span>
+              <span
+                className="insurance-value"
+                data-testid="seguro-curso-regular"
+              >
+                {formatCurrency(SEGURO_PRESTAMISTA_FIXO.cursoRegular)}
+              </span>
+            </div>
+            <div className="insurance-body">
+              <span className="insurance-label">Medicina:</span>
+              <span className="insurance-value" data-testid="seguro-medicina">
+                {formatCurrency(SEGURO_PRESTAMISTA_FIXO.medicina)}
+              </span>
+            </div>
           </div>
         </div>
       </div>

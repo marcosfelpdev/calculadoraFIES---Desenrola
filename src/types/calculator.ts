@@ -11,8 +11,6 @@ export interface CalculatorInputs {
   dataAtual: string;
   situacaoContrato: SituacaoContrato;
   condicaoBeneficio: CondicaoBeneficio;
-  mesesJaPagosSeguro: number;
-  valorSeguroMes: number;
   customQtdParcelas?: number | null;
 }
 
@@ -38,7 +36,4 @@ export interface CalculatorOutputs {
   valorDaParcela: number;
   qtdParcelasPadrao: number;
   valorDaParcelaPadrao: number;
-
-  // Passo E: Restituição de Venda Casada
-  restituicaoEmDobro: number;
 }

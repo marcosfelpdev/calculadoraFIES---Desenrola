@@ -202,6 +202,20 @@ body {
   gap: 6px;
 }
 
+.segmented-control.segmented-benefit-row {
+  width: 100%;
+  min-height: 46px;
+  align-items: stretch;
+}
+
+.segmented-control.segmented-benefit-row .segmented-btn {
+  padding: 0.45rem 0.35rem;
+  font-size: 0.88rem;
+  min-width: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .segmented-btn {
   border: none;
   background: transparent;
@@ -252,9 +266,17 @@ body {
   gap: 1rem;
 }
 
+.inputs-grid > .form-group {
+  min-width: 0;
+}
+
 @media (max-width: 600px) {
   .inputs-grid {
     grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
   }
 }
 
@@ -555,6 +577,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .insurance-title {
@@ -571,12 +595,20 @@ body {
   background-color: var(--color-brand-green-light);
   color: var(--color-brand-green-dark);
   border: 1px solid #bbf7d0;
+  white-space: nowrap;
+}
+
+.insurance-fixed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .insurance-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .insurance-label {

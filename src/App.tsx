@@ -11,8 +11,6 @@ const initialInputs: CalculatorInputs = {
   dataAtual: new Date().toISOString().split('T')[0],
   situacaoContrato: 'ADIMPLENTE',
   condicaoBeneficio: 'Auxílio Emergencial ou CadÚnico - 1 ano',
-  mesesJaPagosSeguro: 0,
-  valorSeguroMes: 0,
   customQtdParcelas: null,
 };
 

@@ -140,22 +140,6 @@ export const ResultsDisplay: FC<ResultsDisplayProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Bloco Seguro Prestamista (Venda Casada) */}
-      <div className="insurance-refund-card">
-        <div className="insurance-header">
-          <span className="insurance-title">
-            Seguro Prestamista (Venda Casada)
-          </span>
-          <span className="refund-badge">Restituição em Dobro</span>
-        </div>
-        <div className="insurance-body">
-          <span className="insurance-label">Total a Restituir:</span>
-          <span className="insurance-value" data-testid="restituicao-seguro">
-            + {formatCurrency(outputs.restituicaoEmDobro)}
-          </span>
-        </div>
-      </div>
     </div>
   );
 };
