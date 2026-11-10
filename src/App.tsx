@@ -4,7 +4,7 @@ import { calculateDesenrolaFies } from './engine/calculatorEngine';
 import { CalculatorForm } from './components/CalculatorForm';
 import { ResultsDisplay } from './components/ResultsDisplay';
 
-export const initialInputs: CalculatorInputs = {
+const initialInputs: CalculatorInputs = {
   anoContrato: 2010,
   saldoDevedorAtual: 0,
   dataAtual: new Date().toISOString().split('T')[0],
