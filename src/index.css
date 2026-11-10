@@ -77,6 +77,13 @@ body {
   justify-content: center;
 }
 
+.brand-logo-img {
+  width: 46px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;

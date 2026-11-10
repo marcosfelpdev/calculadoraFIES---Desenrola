@@ -3,6 +3,7 @@ import { CalculatorInputs } from './types/calculator';
 import { calculateDesenrolaFies } from './engine/calculatorEngine';
 import { CalculatorForm } from './components/CalculatorForm';
 import { ResultsDisplay } from './components/ResultsDisplay';
+import logoImg from './assets/logo.png';
 
 const initialInputs: CalculatorInputs = {
   anoContrato: 2010,
@@ -34,22 +35,12 @@ export default function App() {
       <div className="app-shell">
         <header className="brand-header">
           <div className="brand-logo-lockup">
-            <div className="brand-symbol" aria-hidden="true">
-              <svg
-                width="42"
-                height="42"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="8" y="12" width="52" height="76" rx="14" fill="#FFC700" />
-                <path
-                  d="M22 50 C22 66 46 66 46 50 C46 34 22 34 22 50 Z"
-                  fill="#1849D6"
-                />
-                <rect x="68" y="12" width="22" height="50" rx="11" fill="#FF2438" />
-                <circle cx="79" cy="78" r="11" fill="#00B348" />
-              </svg>
+            <div className="brand-symbol">
+              <img
+                src={logoImg}
+                alt="Desenrola FIES Logo"
+                className="brand-logo-img"
+              />
             </div>
             <div className="brand-text">
               <div className="brand-title">
