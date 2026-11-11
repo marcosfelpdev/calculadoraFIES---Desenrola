@@ -58,6 +58,9 @@ describe('App - Calculadora FIES (Design Visual)', () => {
 
     expect(medicinaEl).toBeInTheDocument();
     expect(medicinaEl.textContent).toContain('15.000,00');
+
+    expect(screen.getByText('Restituição')).toBeInTheDocument();
+    expect(screen.queryByText('Restituição em Dobro')).toBeNull();
   });
 
   it('permite selecionar ADIMPLENTE e INADIMPLENTE produzindo exatamente os mesmos resultados em tela', () => {

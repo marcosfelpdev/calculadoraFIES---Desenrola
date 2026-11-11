@@ -178,7 +178,7 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
                 Valores médios cobrados indevidamente que podem ser recuperados:
               </p>
             </div>
-            <span className="refund-badge">Restituição em Dobro</span>
+            <span className="refund-badge">Restituição</span>
           </div>
 
           <div className="insurance-cards-grid">

@@ -595,15 +595,10 @@ body {
 }
 
 .refund-badge {
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 0.25rem 0.55rem;
-  border-radius: 8px;
-  background-color: var(--color-brand-green-light);
-  color: var(--color-brand-green-dark);
-  border: 1px solid #bbf7d0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-slate-500);
   white-space: nowrap;
-  letter-spacing: 0.02em;
 }
 
 .insurance-cards-grid {
