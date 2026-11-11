@@ -170,14 +170,12 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
         {/* Linha 4: Bloco informativo fixo Seguro Prestamista (Dois Mini-Cards Lado a Lado) */}
         <div className="insurance-refund-card">
           <div className="insurance-header">
-            <div>
-              <span className="insurance-title">
-                Seguro Prestamista (Venda Casada)
-              </span>
-              <p className="insurance-subtitle">
-                Valores médios cobrados indevidamente que podem ser recuperados:
-              </p>
-            </div>
+            <span className="insurance-title">
+              Seguro Prestamista (Venda Casada)
+            </span>
+            <p className="insurance-subtitle">
+              Valores médios cobrados indevidamente que podem ser recuperados:
+            </p>
             <span className="refund-badge">Restituição</span>
           </div>
 
