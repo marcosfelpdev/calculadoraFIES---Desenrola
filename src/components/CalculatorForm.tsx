@@ -167,29 +167,49 @@ export const CalculatorForm: FC<CalculatorFormProps> = ({
           </div>
         </div>
 
-        {/* Linha 4: Bloco informativo fixo Seguro Prestamista */}
+        {/* Linha 4: Bloco informativo fixo Seguro Prestamista (Dois Mini-Cards Lado a Lado) */}
         <div className="insurance-refund-card">
           <div className="insurance-header">
-            <span className="insurance-title">
-              Seguro Prestamista (Venda Casada)
-            </span>
+            <div>
+              <span className="insurance-title">
+                Seguro Prestamista (Venda Casada)
+              </span>
+              <p className="insurance-subtitle">
+                Valores médios cobrados indevidamente que podem ser recuperados:
+              </p>
+            </div>
             <span className="refund-badge">Restituição em Dobro</span>
           </div>
-          <div className="insurance-fixed-list">
-            <div className="insurance-body">
-              <span className="insurance-label">Curso Regular:</span>
-              <span
-                className="insurance-value"
+
+          <div className="insurance-cards-grid">
+            {/* Card Cursos Regulares */}
+            <div className="insurance-mini-card">
+              <div className="insurance-mini-card-top">
+                <span className="insurance-icon" aria-hidden="true">🎓</span>
+                <span className="insurance-card-title">Cursos Regulares</span>
+              </div>
+              <div
+                className="insurance-card-value"
                 data-testid="seguro-curso-regular"
               >
                 {formatCurrency(SEGURO_PRESTAMISTA_FIXO.cursoRegular)}
-              </span>
+              </div>
+              <span className="insurance-card-tag">Estimativa em dobro</span>
             </div>
-            <div className="insurance-body">
-              <span className="insurance-label">Medicina:</span>
-              <span className="insurance-value" data-testid="seguro-medicina">
+
+            {/* Card Medicina */}
+            <div className="insurance-mini-card highlight-medicine">
+              <div className="insurance-mini-card-top">
+                <span className="insurance-icon" aria-hidden="true">🩺</span>
+                <span className="insurance-card-title">Medicina</span>
+              </div>
+              <div
+                className="insurance-card-value"
+                data-testid="seguro-medicina"
+              >
                 {formatCurrency(SEGURO_PRESTAMISTA_FIXO.medicina)}
-              </span>
+              </div>
+              <span className="insurance-card-tag">Estimativa em dobro</span>
             </div>
           </div>
         </div>
